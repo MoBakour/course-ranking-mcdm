@@ -1,0 +1,1 @@
+-   Add data collection methodology in README.md

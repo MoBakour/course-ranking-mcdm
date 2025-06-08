@@ -1,54 +1,114 @@
-# React + TypeScript + Vite
+# Course Ranking MCDM
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A web application for Multi-Criteria Decision Making (MCDM) using the Picture-Fuzzy-Sets CIMAS-ARTASI Decision Model.
 
-Currently, two official plugins are available:
+## Overview
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This tool helps users (e.g., students, faculty, or administrators) evaluate and rank courses based on multiple criteria and expert opinions. It leverages advanced fuzzy logic (Picture Fuzzy Sets) and the CIMAS-ARTASI methodology to aggregate subjective judgments and produce robust, explainable course rankings.
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+-   Upload expert ratings via CSV
+-   Support for linguistic variables and abbreviations (e.g., "Very Good (VG)")
+-   Automatic mapping of linguistic terms to fuzzy numbers
+-   Transparent, step-by-step calculation and ranking
+-   Modern, responsive UI (React + Tailwind CSS)
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Methodology
+
+-   **PFS (Picture Fuzzy Sets):** Allows experts to express degrees of membership, neutrality, and non-membership for each criterion/alternative.
+-   **CIMAS:** Aggregates expert opinions and computes criteria weights.
+-   **ARTASI:** Ranks alternatives (courses) based on aggregated scores and criteria weights.
+
+## Folder Structure
+
+```
+├── src/
+│   ├── components/         # React UI components
+│   ├── pages/              # Main app pages (Calculator, Home, etc.)
+│   ├── utils/              # Core logic, data extraction, and calculation
+│   ├── types/              # TypeScript type definitions
+│   └── ...
+├── public/                 # Static assets
+├── data.csv                # Example input data (CSV)
+├── README.md
+└── ...
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Installation
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. **Clone the repository:**
+    ```sh
+    git clone https://github.com/MoBakour/course-ranking-mcdm.git
+    cd course-ranking-mcdm
+    ```
+2. **Install dependencies:**
+    ```sh
+    npm install
+    ```
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+## Usage
+
+### 1. Prepare Your Data
+
+-   Use the provided `data.csv` format as a template.
+-   Each row represents an expert's ratings for criteria and alternatives, using supported linguistic labels (e.g., "Very Good (VG)", "Important (I)").
+
+### 2. Run the App (Development)
+
+```sh
+npm run dev
 ```
+
+-   Open your browser to the local address shown in the terminal (usually `http://localhost:5173` or similar).
+
+### 3. Upload Data and Get Results
+
+-   Go to the Calculator page.
+-   Upload your `.csv` file.
+-   The app will process the data and display the ranked courses.
+
+### 4. Build for Production
+
+```sh
+npm run build
+```
+
+-   The production-ready files will be in the `dist/` folder.
+
+## Customization
+
+-   **Linguistic Scales:**
+    -   Edit `src/utils/calculator.ts` to adjust or extend the supported linguistic terms and their fuzzy values.
+-   **Criteria/Alternatives:**
+    -   The app dynamically adapts to the number of criteria and alternatives in your CSV.
+
+## Technology Stack
+
+-   React.js
+-   TypeScript
+-   Tailwind CSS
+-   PapaParse (CSV parsing)
+-   Recharts (Chart Data Visualization)
+-   Picture Fuzzy Sets, CIMAS, ARTASI (decision logic)
+
+## Notes
+
+-   All calculations are performed in the browser; no data is sent to a server.
+-   The app is designed for educational and research use. For production or sensitive data, review and adapt as needed.
+
+## License
+
+MIT
+
+---
+
+For questions, suggestions, or contributions, please open an issue or pull request!
+
+## Contact
+
+Let's [connect](https://linkedin.com/in/mobakour)
+
+---
+
+Built with ❤️ by [MoBakour](https://bakour.dev)
