@@ -1,0 +1,13 @@
+Criteria_ID,Criteria_Name,Type,Benefit_Cost
+L1,Website Performance Testing Score,Quantitative,Benefit
+L2,Website Speed Index,Quantitative,Cost
+L3,Time to Interactive,Quantitative,Cost
+L4,Website Total Blocking Time,Quantitative,Cost
+L5,Pages per Visit,Quantitative,Benefit
+L6,Average Visit Duration,Quantitative,Benefit
+Q1,Accessibility,Qualitative,Benefit
+Q2,Navigation and Filtering,Qualitative,Benefit
+Q3,Functionality,Qualitative,Benefit
+Q4,Information Quality,Qualitative,Benefit
+Q5,Accurate Definition of Workflows,Qualitative,Benefit
+Q6,Information Security,Qualitative,Benefit

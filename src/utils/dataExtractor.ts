@@ -18,8 +18,8 @@ export function extractDataFromCSVString(csvString: string) {
     const records = result.data as Record<string, string>[];
 
     const header = Object.keys(records[0]);
-    const expertImportanceCol = header[1];
-    let criteriaStart = 2;
+    const expertImportanceCol = header[2];
+    let criteriaStart = 3;
     let criteriaEnd = criteriaStart;
 
     const criterias: string[] = [];
@@ -66,7 +66,7 @@ export function extractDataFromCSVString(csvString: string) {
         }
 
         return {
-            name: `Expert ${expertIdx + 1}`,
+            name: row["What is your name?"] || `Expert ${expertIdx + 1}`,
             weightLinguistic,
             criteriaRatings,
             alternativeRatings,

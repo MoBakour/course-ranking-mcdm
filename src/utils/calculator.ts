@@ -81,178 +81,6 @@ function weightedMatrix(Y: number[][], expertWeights: number[]): number[][] {
 
 // ---- Full Algorithm ----
 
-export function _runPFS_CIMAS_ARTASI(
-    experts: Expert[],
-    alternatives: Alternative[],
-    criteriaCount: number
-) {
-    // Ensure expert weights are set from weightLinguistic
-    experts.forEach((expert) => {
-        const pfs = expertImportanceScale[expert.weightLinguistic];
-        expert.weight = pfs ? score(pfs) : 0;
-        console.log(
-            `Expert: ${expert.name}, Linguistic: ${expert.weightLinguistic}, Weight: ${expert.weight}`
-        );
-    });
-
-    const d = experts.length;
-    const m = alternatives.length;
-    const n = criteriaCount;
-
-    // === CIMAS ===
-
-    // Step 1: Score matrix Z
-    const Z: number[][] = experts.map((expert) =>
-        expert.criteriaRatings.map((pfs) => score(pfs))
-    );
-
-    // Step 2: Normalize → Y_hj
-    const Y = normalize(Z);
-
-    // Step 3: Expert weights → assume given
-    const expertWeights = experts.map((e) => e.weight ?? 0); // fallback to 0 if undefined
-    console.log("Expert Weights:", expertWeights);
-
-    // Step 4: Weighted matrix X_hj
-    const X = weightedMatrix(Y, expertWeights);
-
-    // Step 5-7: Compute W_j (final criteria weights)
-    const V: number[] = [];
-    const W: number[] = [];
-
-    for (let j = 0; j < n; j++) {
-        const column = X.map((row) => row[j]);
-        const maxVal = Math.max(...column);
-        const minVal = Math.min(...column);
-        V.push(maxVal - minVal);
-    }
-
-    const sumV = V.reduce((a, b) => a + b, 0);
-    console.log("V:", V);
-    console.log("sumV:", sumV);
-    for (let j = 0; j < n; j++) {
-        W.push(V[j] / sumV);
-    }
-
-    console.log("=== Final Criteria Weights (W_j) ===");
-    console.log(W);
-
-    // === ARTASI ===
-
-    // Step 9: Build crisp S_ij matrix (alternatives x criteria)
-    const S: number[][] = Array.from({ length: m }, (_, i) =>
-        Array.from({ length: n }, (_, j) => {
-            // Aggregate expert ratings using PFWA (simplified as equal weights here)
-            const pfsList = experts.map((e) => e.alternativeRatings[i][j]);
-            const scores = pfsList.map((pfs) => score(pfs));
-            const avgScore = scores.reduce((a, b) => a + b, 0) / scores.length;
-            return avgScore;
-        })
-    );
-
-    console.log("=== S_ij Matrix ===");
-    console.table(S);
-
-    // Step 12: Compute S_max_j, S_min_j
-    const S_max: number[] = [];
-    const S_min: number[] = [];
-
-    for (let j = 0; j < n; j++) {
-        const column = S.map((row) => row[j]);
-        const maxVal =
-            Math.max(...column) + Math.pow(Math.max(...column), 1 / m);
-        const minVal =
-            Math.min(...column) - Math.pow(Math.min(...column), 1 / m);
-        S_max.push(maxVal);
-        S_min.push(minVal);
-    }
-
-    // Step 13: Standardize → R_ij
-    const R: number[][] = Array.from({ length: m }, () => Array(n).fill(0));
-    const betaU = 100,
-        betaL = 1;
-
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            R[i][j] =
-                (S[i][j] * (betaU - betaL) +
-                    S_max[j] * betaL -
-                    S_min[j] * betaU) /
-                (S_max[j] - S_min[j]);
-        }
-    }
-
-    // Step 14: Q_ij (2nd standardization)
-    const Q: number[][] = Array.from({ length: m }, () => Array(n).fill(0));
-
-    for (let j = 0; j < n; j++) {
-        const columnR = R.map((row) => row[j]);
-        const maxR = Math.max(...columnR);
-        const minR = Math.min(...columnR);
-
-        for (let i = 0; i < m; i++) {
-            // Assume all criteria are benefit (you can customize!)
-            Q[i][j] = R[i][j]; // For benefit criteria
-            // For cost criteria: Q[i][j] = -R[i][j] + maxR + minR;
-        }
-    }
-
-    // Step 15-17: Compute P⁺, P⁻
-    const Pplus: number[][] = Array.from({ length: m }, () => Array(n).fill(0));
-    const Pminus: number[][] = Array.from({ length: m }, () =>
-        Array(n).fill(0)
-    );
-
-    for (let i = 0; i < m; i++) {
-        for (let j = 0; j < n; j++) {
-            const maxQ = Math.max(...Q.map((row) => row[j]));
-            const minQ = Math.min(...Q.map((row) => row[j]));
-
-            Pplus[i][j] = (Q[i][j] / maxQ) * W[j] * betaU;
-            const Oij = (minQ / Q[i][j]) * W[j] * betaU;
-            Pminus[i][j] = -Oij + maxQ + minQ;
-        }
-    }
-
-    // Step 18: Aggregate utilities N⁺, N⁻
-    const Nplus: number[] = Pplus.map((row) => row.reduce((a, b) => a + b, 0));
-    const Nminus: number[] = Pminus.map((row) =>
-        row.reduce((a, b) => a + b, 0)
-    );
-
-    // Step 19: Final H_i
-    const psi = 0.5,
-        tau = 1;
-    const H: number[] = [];
-
-    for (let i = 0; i < m; i++) {
-        const fPlus = Nplus[i] / (Nplus[i] + Nminus[i]);
-        const fMinus = Nminus[i] / (Nplus[i] + Nminus[i]);
-        const Hi =
-            (Nplus[i] + Nminus[i]) *
-            Math.pow(
-                psi * Math.pow(fPlus, tau) + (1 - psi) * Math.pow(fMinus, tau),
-                1 / tau
-            );
-        H.push(Hi);
-    }
-
-    console.log("=== Final H_i Scores ===");
-    for (let i = 0; i < m; i++) {
-        console.log(`${alternatives[i].name}: H_i = ${H[i].toFixed(4)}`);
-    }
-
-    // Ranking
-    const ranked = alternatives
-        .map((alt, idx) => ({ name: alt.name, score: H[idx] }))
-        .sort((a, b) => b.score - a.score);
-
-    console.log("=== Final Ranking ===");
-    console.table(ranked);
-
-    return ranked;
-}
-
 export function runPFS_CIMAS_ARTASI(
     experts: Expert[],
     alternatives: Alternative[],
@@ -280,18 +108,18 @@ export function runPFS_CIMAS_ARTASI(
     );
 
     // Step 2: Y matrix (normalized)
-    const Y = normalize(Z);
+    const Y = normalize(Z); // Y is normalized Z
 
     // Step 3: Expert weights
     const expertWeights = experts.map((e) => e.weight ?? 0);
     console.log("Expert Weights:", expertWeights);
 
     // Step 4: X matrix (weighted)
-    const X = weightedMatrix(Y, expertWeights);
+    const X = weightedMatrix(Y, expertWeights); // X is normalized Y
 
     // Step 5-7: V and W
-    const V: number[] = [];
-    const W: number[] = [];
+    const V: number[] = []; // V is max - min
+    const W: number[] = []; // normalized V
 
     for (let j = 0; j < n; j++) {
         const column = X.map((row) => row[j]);
@@ -368,6 +196,8 @@ export function runPFS_CIMAS_ARTASI(
         for (let i = 0; i < m; i++) {
             Q[i][j] = R[i][j]; // assuming benefit criteria
             // for cost: Q[i][j] = -R[i][j] + maxR + minR;
+            // TODO: fix this
+            // Q[i][j] = (R[i][j] - minR) / (maxR - minR);
         }
     }
 

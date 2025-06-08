@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
@@ -195,21 +195,40 @@ const Home = () => {
                 ))}
             </motion.p>
 
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: delay, duration: 0.5 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onAnimationComplete={() => setDelay(0)}
-            >
-                <NavLink
-                    to="/calculator"
-                    className="bg-theme-400 text-white px-4 py-2 rounded-md"
+            <div className="flex gap-5">
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: delay, duration: 0.5 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onAnimationComplete={() => setDelay(0)}
                 >
-                    Get Started
-                </NavLink>
-            </motion.div>
+                    <NavLink
+                        to="/calculator"
+                        className="bg-theme-400 text-white block w-[120px] py-2 rounded-md text-center"
+                    >
+                        Get Started
+                    </NavLink>
+                </motion.div>
+
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: delay * 1.3, duration: 0.5 }}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onAnimationComplete={() => setDelay(0)}
+                >
+                    <Link
+                        to="https://docs.google.com/forms/d/e/1FAIpQLSdEHmdIXLdKHnzdc5pjfoz_zmaoKgvK2Kf_XS4giRdRSKffaQ/viewform?usp=dialog"
+                        className="border-2 border-theme-400 text-theme-400 block w-[120px] py-2 rounded-md text-center hover:bg-theme-400 hover:text-white transition-all duration-300"
+                        target="_blank"
+                    >
+                        Survey
+                    </Link>
+                </motion.div>
+            </div>
         </motion.div>
     );
 };

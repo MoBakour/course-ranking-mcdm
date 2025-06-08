@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import {
     BarChart,
@@ -22,7 +22,20 @@ const linguisticOrder = Object.keys(linguisticScale).map((label) =>
     label.split(" ").at(-1)
 );
 
+const CHART_WIDTH = 0.7;
+
 const Details = ({ data, details, setDetails }: DetailsProps) => {
+    const [width, setWidth] = useState(window.innerWidth * CHART_WIDTH);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setWidth(window.innerWidth * CHART_WIDTH);
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
     const criteriaData = useMemo(() => {
         const chartData = [];
 
@@ -98,7 +111,7 @@ const Details = ({ data, details, setDetails }: DetailsProps) => {
                     <div key={idx} className="">
                         <h2 className="text-xl mb-4">{data.criterias[idx]}</h2>
                         <BarChart
-                            width={600}
+                            width={width}
                             height={200}
                             data={criterion.data}
                         >

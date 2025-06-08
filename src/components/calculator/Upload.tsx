@@ -22,8 +22,8 @@ const Upload = ({ setData, setRanking }: UploadProps) => {
         e.preventDefault();
 
         if (file) {
-            // const fileContent = await file.text();
-            const fileContent = generateRandomSurveyCSV(10); // for testing
+            const fileContent = await file.text();
+            // const fileContent = generateRandomSurveyCSV(10); // for testing
 
             const data = extractDataFromCSVString(fileContent);
             setData(data);

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const Header = () => {
     const [active, setActive] = useState(false);
@@ -7,7 +7,7 @@ const Header = () => {
     return (
         <header className="p-5 pb-15 flex flex-col justify-center items-center gap-2 w-fit m-auto">
             <h1 className="text-4xl font-bold tracking-wider">
-                Course Ranking System
+                <Link to="/">Course Ranking System</Link>
             </h1>
 
             <p className="text-gray-400 tracking-widest">
