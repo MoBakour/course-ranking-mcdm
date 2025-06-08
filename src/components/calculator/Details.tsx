@@ -1,16 +1,27 @@
 import { useEffect, useMemo, useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import {
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    CartesianGrid,
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
     Tooltip,
     Legend,
-} from "recharts";
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
 import type { ExpertData } from "../../types";
 import { linguisticScale, getLinguisticLabel } from "../../utils/calculator";
+
+// Register ChartJS components
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend
+);
 
 interface DetailsProps {
     data: ExpertData;
@@ -106,28 +117,47 @@ const Details = ({ data, details, setDetails }: DetailsProps) => {
                 ))}
             </div>
 
-            <div className="flex flex-col justify-center items-center gap-10">
-                {criteriaData.map((criterion, idx) => (
-                    <div key={idx} className="">
-                        <h2 className="text-xl mb-4">{data.criterias[idx]}</h2>
-                        <BarChart
-                            width={width}
-                            height={200}
-                            data={criterion.data}
-                        >
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="rating" />
-                            <YAxis />
-                            <Tooltip />
-                            <Legend />
-                            <Bar
-                                dataKey="count"
-                                fill="#8884d8"
-                                name="Experts"
-                            />
-                        </BarChart>
-                    </div>
-                ))}
+            <div className="flex justify-center items-center gap-10 flex-wrap">
+                {criteriaData.map((criterion, idx) => {
+                    const chartData = {
+                        labels: criterion.data.map((item) => item.rating),
+                        datasets: [
+                            {
+                                label: "Experts",
+                                data: criterion.data.map((item) => item.count),
+                                backgroundColor: "#8884d8",
+                            },
+                        ],
+                    };
+
+                    const options = {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: "top" as const,
+                            },
+                            title: {
+                                display: true,
+                                text: data.criterias[idx],
+                            },
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1,
+                                },
+                            },
+                        },
+                    };
+
+                    return (
+                        <div key={idx}>
+                            <Bar data={chartData} options={options} />
+                        </div>
+                    );
+                })}
             </div>
         </div>
     );

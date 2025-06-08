@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Table from "./Table";
 import Details from "./Details";
+import Charts from "./Charts";
 import type { ExpertData, Ranking } from "../../types";
 
 interface ResultsProps {
@@ -12,7 +13,7 @@ const Results = ({ data, ranking }: ResultsProps) => {
     const [details, setDetails] = useState<string | null>(null);
 
     return (
-        <div>
+        <div className="space-y-8">
             {details !== null ? (
                 <Details
                     data={data}
@@ -20,7 +21,10 @@ const Results = ({ data, ranking }: ResultsProps) => {
                     setDetails={setDetails}
                 />
             ) : (
-                <Table data={ranking} setDetails={setDetails} />
+                <>
+                    <Table data={ranking} setDetails={setDetails} />
+                    <Charts data={data} ranking={ranking} />
+                </>
             )}
         </div>
     );
