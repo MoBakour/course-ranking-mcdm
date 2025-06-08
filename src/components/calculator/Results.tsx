@@ -1,0 +1,29 @@
+import { useState } from "react";
+import Table from "./Table";
+import Details from "./Details";
+import type { ExpertData, Ranking } from "../../types";
+
+interface ResultsProps {
+    data: ExpertData;
+    ranking: Ranking[];
+}
+
+const Results = ({ data, ranking }: ResultsProps) => {
+    const [details, setDetails] = useState<string | null>(null);
+
+    return (
+        <div>
+            {details !== null ? (
+                <Details
+                    data={data}
+                    details={details}
+                    setDetails={setDetails}
+                />
+            ) : (
+                <Table data={ranking} setDetails={setDetails} />
+            )}
+        </div>
+    );
+};
+
+export default Results;
