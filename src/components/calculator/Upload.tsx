@@ -65,25 +65,23 @@ const Upload = ({ setData, setRanking }: UploadProps) => {
     };
 
     return (
-        <div>
-            <label
-                onDrop={handleFileDrop}
-                onDragOver={(e) => handleDrag(e, true)}
-                onDragLeave={(e) => handleDrag(e, false)}
-                className={`flex flex-col justify-center items-center gap-2 border-dashed border-2 opacity-30 text-lg rounded-md h-32 transition hover:opacity-50 cursor-pointer ${
-                    dragging ? "opacity-50" : ""
-                }`}
-            >
-                <input
-                    onChange={handleFileChange}
-                    type="file"
-                    accept=".csv"
-                    className="hidden"
-                />
-                <FaArrowUpFromBracket />
-                <span>Upload Expert Data (.csv)</span>
-            </label>
-        </div>
+        <label
+            onDrop={handleFileDrop}
+            onDragOver={(e) => handleDrag(e, true)}
+            onDragLeave={(e) => handleDrag(e, false)}
+            className={`flex flex-col justify-center items-center gap-2 border-dashed border-2 opacity-30 text-lg rounded-md h-32 transition hover:opacity-50 cursor-pointer ${
+                dragging ? "opacity-50" : ""
+            }`}
+        >
+            <input
+                onChange={handleFileChange}
+                type="file"
+                accept=".csv"
+                className="hidden"
+            />
+            <FaArrowUpFromBracket />
+            <span>Upload Expert Data (.csv)</span>
+        </label>
     );
 };
 

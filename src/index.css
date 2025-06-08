@@ -6,6 +6,8 @@
     font-family: "Quicksand", sans-serif;
 }
 
+@custom-variant hover (&:hover);
+
 @theme {
     --color-theme-100: #210f37;
     --color-theme-200: #4f1c51;
