@@ -13,4 +13,6 @@
     --color-theme-200: #4f1c51;
     --color-theme-300: #a55b4b;
     --color-theme-400: #dca06d;
+
+    --breakpoint-xs: 480px;
 }

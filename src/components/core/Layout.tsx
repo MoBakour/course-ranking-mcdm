@@ -18,7 +18,7 @@ const Layout = ({ children }: LayoutProps) => {
             />
 
             <Header />
-            <main className="w-[80%] max-w-screen-lg m-auto relative pb-10">
+            <main className="w-[80%] max-xs:w-[90%] max-w-screen-lg m-auto relative pb-10">
                 {children}
             </main>
         </div>
