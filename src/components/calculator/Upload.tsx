@@ -36,27 +36,18 @@ const Upload = ({ setData, setRanking }: UploadProps) => {
         } else if (files && files.length > 1) {
             const processedFiles = [...files];
 
+            const readFile = async (name: string) => {
+                const file = processedFiles.find((file) => file.name === name);
+                return file ? await file.text() : "";
+            };
+
             data = extractDataFromFolder({
-                experts:
-                    (await processedFiles
-                        .find((file) => file.name === "experts.csv")
-                        ?.text()) || "",
-                criteria:
-                    (await processedFiles
-                        .find((file) => file.name === "criteria.csv")
-                        ?.text()) || "",
-                alternatives:
-                    (await processedFiles
-                        .find((file) => file.name === "alternatives.csv")
-                        ?.text()) || "",
-                criteriaEvals:
-                    (await processedFiles
-                        .find(
-                            (file) =>
-                                file.name ===
-                                "expert-alternative-evaluation.csv"
-                        )
-                        ?.text()) || "",
+                experts: await readFile("experts.csv"),
+                criteria: await readFile("criteria.csv"),
+                alternatives: await readFile("alternatives.csv"),
+                criteriaEvals: await readFile(
+                    "expert-alternative-evaluation.csv"
+                ),
             });
         } else {
             const expertsCount = +(prompt("Enter the number of experts") || 10);

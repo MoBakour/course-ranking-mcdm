@@ -1,4 +1,4 @@
-import type { PFS, Expert, Alternative } from "../types";
+import type { PFS, Expert, Alternative, Ranking } from "../types";
 import { expertImportanceScale } from "./linguisticScales";
 
 // ---- Core functions ----
@@ -52,7 +52,7 @@ export function runPFS_CIMAS_ARTASI(
     experts: Expert[],
     alternatives: Alternative[],
     criteriaCount: number
-) {
+): Ranking[] {
     // === PREP ===
 
     experts.forEach((expert) => {
