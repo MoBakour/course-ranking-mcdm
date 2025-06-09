@@ -104,7 +104,7 @@ const Details = ({ data, details, setDetails }: DetailsProps) => {
                 ))}
             </div>
 
-            <div className="flex justify-center items-center gap-10 flex-wrap">
+            <div className="flex justify-center items-center gap-12 flex-wrap">
                 {criteriaData.map((criterion, idx) => {
                     const chartData = {
                         labels: criterion.data.map((item) => item.rating),
