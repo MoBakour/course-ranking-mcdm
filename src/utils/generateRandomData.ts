@@ -1,18 +1,19 @@
 export function generateRandomSurveyCSV(numExperts: number): string {
-    // 1️⃣ Define the header
+    // Define the header
     const header = [
         "Timestamp",
-        "How would you rate your level of expertise and importance in contributing to this course recommendation decision?  ",
-        "How important is the criterion 'Career Relevance' when recommending a course? ",
-        "How important is the criterion 'Prerequisite Compatibility' when recommending a course? ",
-        "How important is the criterion 'Instructor Expertise' when recommending a course? ",
-        "How important is the criterion 'Course Difficulty' when recommending a course? ",
-        "How important is the criterion 'Project-Based Learning' when recommending a course? ",
-        "How important is the criterion 'Student Satisfaction' when recommending a course? ",
-        "How important is the criterion 'Workload Balance' when recommending a course? ",
-        "How important is the criterion 'Use of Modern Tools/Technologies' when recommending a course? ",
-        "How important is the criterion 'Interdisciplinary Usefulness' when recommending a course? ",
-        "How important is the criterion 'Opportunity for Research or Innovation' when recommending a course? ",
+        "What is your name?",
+        "How would you rate your level of expertise and importance in contributing to this course recommendation decision?",
+        "How important is the criterion 'Career Relevance' when recommending a course?",
+        "How important is the criterion 'Prerequisite Compatibility' when recommending a course?",
+        "How important is the criterion 'Instructor Expertise' when recommending a course?",
+        "How important is the criterion 'Course Difficulty' when recommending a course?",
+        "How important is the criterion 'Project-Based Learning' when recommending a course?",
+        "How important is the criterion 'Student Satisfaction' when recommending a course?",
+        "How important is the criterion 'Workload Balance' when recommending a course?",
+        "How important is the criterion 'Use of Modern Tools/Technologies' when recommending a course?",
+        "How important is the criterion 'Interdisciplinary Usefulness' when recommending a course?",
+        "How important is the criterion 'Opportunity for Research or Innovation' when recommending a course?",
     ];
 
     // Add alternative ratings (10 alternatives × 10 criteria)
@@ -50,7 +51,7 @@ export function generateRandomSurveyCSV(numExperts: number): string {
         }
     }
 
-    // 2️⃣ Define possible answers
+    // Define possible answers
     const linguisticAnswers = [
         "Extremely Good (EG)",
         "Very Very Good (VVG)",
@@ -72,14 +73,17 @@ export function generateRandomSurveyCSV(numExperts: number): string {
         "Very Unimportant (VUI)",
     ];
 
-    // 3️⃣ Generate rows
+    // Generate rows
     const rows: string[][] = [];
 
     for (let i = 0; i < numExperts; i++) {
         const row: string[] = [];
 
         // Timestamp → you can randomize time if you want
-        row.push(`2025/05/06 11:09:4${3 + i} PM GMT+3`);
+        row.push(new Date().toISOString());
+
+        // Name
+        row.push(`Expert ${i + 1}`);
 
         // Expert importance
         row.push(randomChoice(expertImportanceAnswers));
@@ -97,7 +101,7 @@ export function generateRandomSurveyCSV(numExperts: number): string {
         rows.push(row);
     }
 
-    // 4️⃣ Build CSV string
+    // Build CSV string
     const csvString = [
         header.join(","),
         ...rows.map((row) => row.join(",")),

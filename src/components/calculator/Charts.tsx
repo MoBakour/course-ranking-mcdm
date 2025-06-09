@@ -55,8 +55,8 @@ const Charts = ({ data, ranking }: ChartsProps) => {
     };
 
     // Calculate average ratings for each criterion and alternative
-    const averageRatings = data.criterias.map((criterion, criterionIndex) => {
-        return data.alternatives.map((alternative, altIndex) => {
+    const averageRatings = data.criterias.map((_criterion, criterionIndex) => {
+        return data.alternatives.map((_alternative, altIndex) => {
             const ratings = data.experts.map((expert) => {
                 const rating =
                     expert.alternativeRatings[altIndex][criterionIndex];
@@ -71,12 +71,18 @@ const Charts = ({ data, ranking }: ChartsProps) => {
         datasets: data.criterias.map((criterion, index) => ({
             label: criterion,
             data: averageRatings[index],
-            backgroundColor: `hsla(${
-                (index * 360) / data.criterias.length
-            }, 70%, 50%, 0.6)`,
-            borderColor: `hsla(${
-                (index * 360) / data.criterias.length
-            }, 70%, 50%, 1)`,
+            backgroundColor: [
+                "rgba(33, 15, 55, 0.6)", // theme-100
+                "rgba(79, 28, 81, 0.6)", // theme-200
+                "rgba(165, 91, 75, 0.6)", // theme-300
+                "rgba(220, 160, 109, 0.6)", // theme-400
+            ][index % 4],
+            borderColor: [
+                "rgba(33, 15, 55, 1)", // theme-100
+                "rgba(79, 28, 81, 1)", // theme-200
+                "rgba(165, 91, 75, 1)", // theme-300
+                "rgba(220, 160, 109, 1)", // theme-400
+            ][index % 4],
             borderWidth: 1,
         })),
     };
@@ -95,6 +101,11 @@ const Charts = ({ data, ranking }: ChartsProps) => {
         scales: {
             y: {
                 beginAtZero: true,
+            },
+            x: {
+                ticks: {
+                    display: false,
+                },
             },
         },
     };
@@ -115,6 +126,11 @@ const Charts = ({ data, ranking }: ChartsProps) => {
                 beginAtZero: true,
                 max: 1,
             },
+            x: {
+                ticks: {
+                    display: false,
+                },
+            },
         },
     };
 
@@ -132,6 +148,11 @@ const Charts = ({ data, ranking }: ChartsProps) => {
         scales: {
             y: {
                 beginAtZero: true,
+            },
+            x: {
+                ticks: {
+                    display: false,
+                },
             },
         },
     };

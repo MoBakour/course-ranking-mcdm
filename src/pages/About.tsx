@@ -102,7 +102,7 @@ const About = () => {
                             </h3>
                             <p className="text-white/70">{member.major}</p>
                             <p className="text-white/70">{member.number}</p>
-                            <div className="flex gap-2 mt-2">
+                            <div className="flex gap-3 mt-2">
                                 {member.links?.map((link) => (
                                     <a
                                         href={link.url}
