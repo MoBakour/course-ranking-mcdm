@@ -27,3 +27,9 @@ export interface ExpertData {
     numCriteria: number;
     criterias: string[];
 }
+
+declare module "react" {
+    interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
+        webkitdirectory?: string;
+    }
+}

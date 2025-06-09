@@ -1,6 +1,10 @@
 import Papa from "papaparse";
 import type { PFS } from "../types";
-import { linguisticScale } from "./calculator";
+import {
+    linguisticScale,
+    expertImportanceScale,
+    getLingusticFromAbbreviation,
+} from "./linguisticScales";
 
 const extractCourseName = (header: string, index: number) => {
     const parts = header.split("-");
@@ -74,4 +78,116 @@ export function extractDataFromCSVString(csvString: string) {
     });
 
     return { experts, alternatives, numCriteria, criterias };
+}
+
+interface FolderData {
+    experts: string;
+    criteria: string;
+    alternatives: string;
+    criteriaEvals: string;
+}
+
+export function extractDataFromFolder(data: FolderData) {
+    // Parse experts
+    const expertsResult = Papa.parse(data.experts, {
+        header: true,
+        skipEmptyLines: true,
+    });
+    const expertsData = expertsResult.data as Record<string, string>[];
+
+    // Parse criteria
+    const criteriaResult = Papa.parse(data.criteria, {
+        header: true,
+        skipEmptyLines: true,
+    });
+    const criteriaData = criteriaResult.data as Record<string, string>[];
+
+    // Parse alternatives
+    const alternativesResult = Papa.parse(data.alternatives, {
+        header: true,
+        skipEmptyLines: true,
+    });
+    const alternativesData = alternativesResult.data as Record<
+        string,
+        string
+    >[];
+
+    // Parse criteria evaluations
+    const criteriaEvalsResult = Papa.parse(data.criteriaEvals, {
+        header: true,
+        skipEmptyLines: true,
+    });
+    const criteriaEvalsData = criteriaEvalsResult.data as Record<
+        string,
+        string
+    >[];
+
+    // Create experts array with required format
+    const experts = expertsData.map((expert) => {
+        // Get all evaluations for this expert
+        const expertEvals = criteriaEvalsData.filter(
+            (row) => row.Expert_ID === expert.Expert_ID
+        );
+
+        // Get criteria importance evaluations
+        const criteriaRatings: PFS[] = criteriaData.map((criterion) => {
+            const evaluation = expertEvals.find(
+                (e) =>
+                    e.Criteria_ID === criterion.Criteria_ID && !e.Alternative_ID // Only criteria importance evaluations
+            );
+
+            return linguisticScale[
+                getLingusticFromAbbreviation(
+                    evaluation?.Evaluation || "M",
+                    linguisticScale
+                )
+            ];
+        }) as PFS[];
+
+        // Get alternative evaluations
+        const alternativeRatings: PFS[][] = alternativesData.map(
+            (alternative) => {
+                return criteriaData.map((criterion) => {
+                    const evaluation = expertEvals.find(
+                        (e) =>
+                            e.Expert_ID === expert.Expert_ID &&
+                            e.Criteria_ID === criterion.Criteria_ID &&
+                            e.Alternative_ID === alternative.Alternative_ID
+                    );
+
+                    return linguisticScale[
+                        getLingusticFromAbbreviation(
+                            evaluation?.Evaluation || "M",
+                            linguisticScale
+                        )
+                    ];
+                });
+            }
+        );
+
+        return {
+            name: expert.Expert_Name,
+            weightLinguistic: getLingusticFromAbbreviation(
+                expert.Importance_Level || "M",
+                expertImportanceScale
+            ),
+            criteriaRatings,
+            alternativeRatings,
+        };
+    });
+
+    // Create alternatives array with required format
+    const alternatives = alternativesData.map((alt) => ({
+        name: alt.Alternative_Name,
+    }));
+
+    // Create criteria array
+    const criterias = criteriaData.map((crit) => crit.Criteria_Name);
+
+    return {
+        experts,
+        alternatives,
+        numCriteria: criteriaData.length,
+        criterias,
+    };
 }

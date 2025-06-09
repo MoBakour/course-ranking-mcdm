@@ -11,7 +11,10 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import type { ExpertData } from "../../types";
-import { linguisticScale, getLinguisticLabel } from "../../utils/calculator";
+import {
+    linguisticScale,
+    getLinguisticLabel,
+} from "../../utils/linguisticScales";
 
 // Register ChartJS components
 ChartJS.register(

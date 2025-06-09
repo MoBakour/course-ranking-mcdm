@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { FaArrowUpFromBracket } from "react-icons/fa6";
-import { extractDataFromCSVString } from "../../utils/dataExtractor";
+import {
+    extractDataFromCSVString,
+    extractDataFromFolder,
+} from "../../utils/dataExtractor";
 import { runPFS_CIMAS_ARTASI } from "../../utils/calculator";
 import { generateRandomSurveyCSV } from "../../utils/generateRandomData";
 import type { ExpertData, Ranking } from "../../types";
@@ -17,22 +20,51 @@ const Upload = ({ setData, setRanking }: UploadProps) => {
         e?:
             | React.ChangeEvent<HTMLInputElement>
             | React.DragEvent<HTMLLabelElement>,
-        file?: File
+        files?: FileList
     ) => {
         if (e) {
             e.preventDefault();
         }
 
-        let fileContent: string;
+        console.log("FILES", files);
 
-        if (file) {
-            fileContent = await file.text();
+        let data: any;
+
+        if (files && files.length === 1) {
+            const fileContent = await files[0].text();
+            data = extractDataFromCSVString(fileContent);
+        } else if (files && files.length > 1) {
+            const processedFiles = [...files];
+
+            data = extractDataFromFolder({
+                experts:
+                    (await processedFiles
+                        .find((file) => file.name === "experts.csv")
+                        ?.text()) || "",
+                criteria:
+                    (await processedFiles
+                        .find((file) => file.name === "criteria.csv")
+                        ?.text()) || "",
+                alternatives:
+                    (await processedFiles
+                        .find((file) => file.name === "alternatives.csv")
+                        ?.text()) || "",
+                criteriaEvals:
+                    (await processedFiles
+                        .find(
+                            (file) =>
+                                file.name ===
+                                "expert-alternative-evaluation.csv"
+                        )
+                        ?.text()) || "",
+            });
         } else {
             const expertsCount = +(prompt("Enter the number of experts") || 10);
-            fileContent = generateRandomSurveyCSV(expertsCount);
+            const fileContent = generateRandomSurveyCSV(expertsCount);
+            data = extractDataFromCSVString(fileContent);
         }
 
-        const data = extractDataFromCSVString(fileContent);
+        // const data = extractDataFromCSVString(fileContent);
         setData(data);
 
         console.log("DATA");
@@ -49,16 +81,16 @@ const Upload = ({ setData, setRanking }: UploadProps) => {
     };
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            processFile(e, file);
+        const files = e.target.files;
+        if (files && files.length > 0) {
+            processFile(e, files);
         }
     };
 
     const handleFileDrop = async (e: React.DragEvent<HTMLLabelElement>) => {
-        const file = e.dataTransfer.files[0];
-        if (file) {
-            processFile(e, file);
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            processFile(e, files);
         }
     };
 
@@ -82,6 +114,7 @@ const Upload = ({ setData, setRanking }: UploadProps) => {
             >
                 <input
                     onChange={handleFileChange}
+                    multiple
                     type="file"
                     accept=".csv"
                     className="hidden"

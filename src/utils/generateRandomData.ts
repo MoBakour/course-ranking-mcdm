@@ -1,3 +1,5 @@
+import { expertImportanceScale, linguisticScale } from "./linguisticScales";
+
 export function generateRandomSurveyCSV(numExperts: number): string {
     // Define the header
     const header = [
@@ -52,26 +54,9 @@ export function generateRandomSurveyCSV(numExperts: number): string {
     }
 
     // Define possible answers
-    const linguisticAnswers = [
-        "Extremely Good (EG)",
-        "Very Very Good (VVG)",
-        "Very Good (VG)",
-        "Good (G)",
-        "Medium Good (MG)",
-        "Medium (M)",
-        "Medium Bad (MB)",
-        "Bad (B)",
-        "Very Bad (VB)",
-        "Very Very Bad (VVB)",
-    ];
+    const linguisticAnswers = Object.keys(linguisticScale);
 
-    const expertImportanceAnswers = [
-        "Very Important (VI)",
-        "Important (I)",
-        "Medium (M)",
-        "Unimportant (UI)",
-        "Very Unimportant (VUI)",
-    ];
+    const expertImportanceAnswers = Object.keys(expertImportanceScale);
 
     // Generate rows
     const rows: string[][] = [];
