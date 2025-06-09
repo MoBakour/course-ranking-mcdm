@@ -1,6 +1,3 @@
-// src/pages/Methodology.tsx
-import { motion } from "framer-motion";
-
 const Methodology = () => {
     return (
         <main className="max-w-4xl mx-auto px-6 py-12 text-white space-y-10">

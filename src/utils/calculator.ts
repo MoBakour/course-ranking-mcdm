@@ -96,7 +96,8 @@ export function runPFS_CIMAS_ARTASI(
         );
     });
 
-    const d = experts.length;
+    // TODO: fix this
+    // const d = experts.length;
     const m = alternatives.length;
     const n = criteriaCount;
 
@@ -189,9 +190,9 @@ export function runPFS_CIMAS_ARTASI(
     const Q: number[][] = Array.from({ length: m }, () => Array(n).fill(0));
 
     for (let j = 0; j < n; j++) {
-        const columnR = R.map((row) => row[j]);
-        const maxR = Math.max(...columnR);
-        const minR = Math.min(...columnR);
+        // const columnR = R.map((row) => row[j]);
+        // const maxR = Math.max(...columnR);
+        // const minR = Math.min(...columnR);
 
         for (let i = 0; i < m; i++) {
             Q[i][j] = R[i][j]; // assuming benefit criteria
@@ -277,46 +278,3 @@ export function runPFS_CIMAS_ARTASI(
 
     return ranked;
 }
-
-// ---- Example usage ----
-
-// Dummy example with 3 experts, 10 alternatives, 10 criteria
-const experts: Expert[] = [
-    {
-        name: "Expert 1",
-        weightLinguistic: "Very Important (VI)",
-        criteriaRatings: Array(10).fill(linguisticScale["Very Good (VG)"]),
-        alternativeRatings: Array.from({ length: 10 }, () =>
-            Array(10).fill(linguisticScale["Good (G)"])
-        ),
-    },
-    {
-        name: "Expert 2",
-        weightLinguistic: "Important (I)",
-        criteriaRatings: Array(10).fill(linguisticScale["Good (G)"]),
-        alternativeRatings: Array.from({ length: 10 }, () =>
-            Array(10).fill(linguisticScale["Medium Good (MG)"])
-        ),
-    },
-    {
-        name: "Expert 3",
-        weightLinguistic: "Medium (M)",
-        criteriaRatings: Array(10).fill(linguisticScale["Medium Good (MG)"]),
-        alternativeRatings: Array.from({ length: 10 }, () =>
-            Array(10).fill(linguisticScale["Very Good (VG)"])
-        ),
-    },
-];
-
-// Convert linguistic weights to numeric weights before running the algorithm
-experts.forEach((expert) => {
-    const pfs = expertImportanceScale[expert.weightLinguistic];
-    expert.weight = score(pfs);
-});
-
-const alternatives: Alternative[] = Array.from({ length: 10 }, (_, i) => ({
-    name: `Course ${i + 1}`,
-}));
-
-// Run the algorithm
-// runPFS_CIMAS_ARTASI(experts, alternatives, 10);
