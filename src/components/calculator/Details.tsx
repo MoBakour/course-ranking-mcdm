@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import {
     Chart as ChartJS,
@@ -33,20 +33,7 @@ const linguisticOrder = Object.keys(linguisticScale).map((label) =>
     label.split(" ").at(-1)
 );
 
-const CHART_WIDTH = 0.7;
-
 const Details = ({ data, details, setDetails }: DetailsProps) => {
-    const [width, setWidth] = useState(window.innerWidth * CHART_WIDTH);
-
-    useEffect(() => {
-        const handleResize = () => {
-            setWidth(window.innerWidth * CHART_WIDTH);
-        };
-
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
-
     const criteriaData = useMemo(() => {
         const chartData = [];
 
