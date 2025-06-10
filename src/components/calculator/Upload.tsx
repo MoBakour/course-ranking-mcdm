@@ -4,7 +4,9 @@ import {
     extractDataFromCSVString,
     extractDataFromFolder,
 } from "../../utils/dataExtractor";
+import { extractDataFromArticleFiles } from "../../utils/dataExtractor2";
 import { runPFS_CIMAS_ARTASI } from "../../utils/calculator";
+import { runPFS_CIMAS_ARTASI_Article } from "../../utils/calculator2";
 import { generateRandomSurveyCSV } from "../../utils/generateRandomData";
 import type { ExpertData, Ranking } from "../../types";
 
@@ -29,46 +31,94 @@ const Upload = ({ setData, setRanking }: UploadProps) => {
         console.log("FILES", files);
 
         let data: any;
+        let ranking: Ranking[];
 
         if (files && files.length === 1) {
+            // Single file upload - use old format
             const fileContent = await files[0].text();
             data = extractDataFromCSVString(fileContent);
+            ranking = runPFS_CIMAS_ARTASI(
+                data.experts,
+                data.alternatives,
+                data.numCriteria
+            );
         } else if (files && files.length > 1) {
+            // Multiple files - check if it's article data format
             const processedFiles = [...files];
+            const fileNames = processedFiles.map((f) => f.name);
 
             const readFile = async (name: string) => {
                 const file = processedFiles.find((file) => file.name === name);
                 return file ? await file.text() : "";
             };
 
-            data = extractDataFromFolder({
-                experts: await readFile("experts.csv"),
-                criteria: await readFile("criteria.csv"),
-                alternatives: await readFile("alternatives.csv"),
-                criteriaEvals: await readFile(
-                    "expert-alternative-evaluation.csv"
-                ),
-            });
+            // Check if all required article data files are present
+            const requiredFiles = [
+                "experts.csv",
+                "criteria.csv",
+                "alternatives.csv",
+                "expert-alternative-evaluation.csv",
+                "quantitative-data.csv",
+                "criteria-eval-r1.csv",
+                "criteria-eval-r2.csv",
+            ];
+
+            const hasAllArticleFiles = requiredFiles.every((file) =>
+                fileNames.includes(file)
+            );
+
+            if (hasAllArticleFiles) {
+                // Use article data format
+                data = extractDataFromArticleFiles({
+                    experts: await readFile("experts.csv"),
+                    criteria: await readFile("criteria.csv"),
+                    alternatives: await readFile("alternatives.csv"),
+                    expertAlternativeEval: await readFile(
+                        "expert-alternative-evaluation.csv"
+                    ),
+                    quantitativeData: await readFile("quantitative-data.csv"),
+                    criteriaEvalR1: await readFile("criteria-eval-r1.csv"),
+                    criteriaEvalR2: await readFile("criteria-eval-r2.csv"),
+                });
+
+                ranking = runPFS_CIMAS_ARTASI_Article(
+                    data.experts,
+                    data.alternatives,
+                    data.criteria,
+                    data.quantitativeMatrix
+                );
+            } else {
+                // Use old folder format
+                data = extractDataFromFolder({
+                    experts: await readFile("experts.csv"),
+                    criteria: await readFile("criteria.csv"),
+                    alternatives: await readFile("alternatives.csv"),
+                    criteriaEvals: await readFile(
+                        "expert-alternative-evaluation.csv"
+                    ),
+                });
+
+                ranking = runPFS_CIMAS_ARTASI(
+                    data.experts,
+                    data.alternatives,
+                    data.numCriteria
+                );
+            }
         } else {
+            // Generate random data
             const expertsCount = +(prompt("Enter the number of experts") || 10);
             const fileContent = generateRandomSurveyCSV(expertsCount);
             data = extractDataFromCSVString(fileContent);
+            ranking = runPFS_CIMAS_ARTASI(
+                data.experts,
+                data.alternatives,
+                data.numCriteria
+            );
         }
 
-        // const data = extractDataFromCSVString(fileContent);
+        console.log("DATA", data);
         setData(data);
-
-        console.log("DATA");
-        console.log(data);
-
-        const ranked = runPFS_CIMAS_ARTASI(
-            data.experts,
-            data.alternatives,
-            data.numCriteria
-        );
-
-        console.log(ranked);
-        setRanking(ranked);
+        setRanking(ranking);
     };
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,6 +162,10 @@ const Upload = ({ setData, setRanking }: UploadProps) => {
                 />
                 <FaArrowUpFromBracket />
                 <span>Upload Expert Data (.csv)</span>
+                <span className="text-sm">
+                    Single file or multiple files (experts.csv, criteria.csv,
+                    etc.)
+                </span>
             </label>
 
             <button

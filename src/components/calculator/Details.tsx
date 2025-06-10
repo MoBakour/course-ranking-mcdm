@@ -46,7 +46,7 @@ const Details = ({ data, details, setDetails }: DetailsProps) => {
         );
 
         // For each criterion
-        for (let i = 0; i < data.numCriteria; i++) {
+        for (let i = 0; i < data.criteria.length; i++) {
             // Count occurrences of each linguistic value
             const counts: Record<string, number> = {};
 
@@ -129,7 +129,9 @@ const Details = ({ data, details, setDetails }: DetailsProps) => {
                             },
                             title: {
                                 display: true,
-                                text: data.criterias[idx],
+                                text:
+                                    data.criteria[idx]?.name ||
+                                    (data.criteria[idx] as unknown as string),
                             },
                         },
                         scales: {

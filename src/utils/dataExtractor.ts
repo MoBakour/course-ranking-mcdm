@@ -26,14 +26,14 @@ export function extractDataFromCSVString(csvString: string) {
     let criteriaStart = 3;
     let criteriaEnd = criteriaStart;
 
-    const criterias: string[] = [];
+    const criteria: string[] = [];
 
     while (
         criteriaEnd < header.length &&
         header[criteriaEnd].includes("How important is the criterion")
     ) {
         const quote = header[criteriaEnd].includes("'") ? "'" : '"';
-        criterias.push(header[criteriaEnd].split(quote)[1]);
+        criteria.push(header[criteriaEnd].split(quote)[1]);
         criteriaEnd++;
     }
 
@@ -77,7 +77,7 @@ export function extractDataFromCSVString(csvString: string) {
         };
     });
 
-    return { experts, alternatives, numCriteria, criterias };
+    return { experts, alternatives, numCriteria, criteria };
 }
 
 interface FolderData {
@@ -182,12 +182,12 @@ export function extractDataFromFolder(data: FolderData) {
     }));
 
     // Create criteria array
-    const criterias = criteriaData.map((crit) => crit.Criteria_Name);
+    const criteria = criteriaData.map((crit) => crit.Criteria_Name);
 
     return {
         experts,
         alternatives,
         numCriteria: criteriaData.length,
-        criterias,
+        criteria,
     };
 }

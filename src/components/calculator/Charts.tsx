@@ -55,7 +55,7 @@ const Charts = ({ data, ranking }: ChartsProps) => {
     };
 
     // Calculate average ratings for each criterion and alternative
-    const averageRatings = data.criterias.map((_criterion, criterionIndex) => {
+    const averageRatings = data.criteria.map((_criterion, criterionIndex) => {
         return data.alternatives.map((_alternative, altIndex) => {
             const ratings = data.experts.map((expert) => {
                 const rating =
@@ -68,8 +68,8 @@ const Charts = ({ data, ranking }: ChartsProps) => {
 
     const averageRatingsData = {
         labels: data.alternatives.map((alt) => alt.name),
-        datasets: data.criterias.map((criterion, index) => ({
-            label: criterion,
+        datasets: data.criteria.map((criterion, index) => ({
+            label: criterion?.name || (criterion as unknown as string),
             data: averageRatings[index],
             backgroundColor: [
                 "rgba(33, 15, 55, 0.6)", // theme-100
