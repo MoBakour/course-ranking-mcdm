@@ -84,7 +84,7 @@ const About = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {teamMembers.map((member, index) => (
                         <div key={index} className="flex flex-col items-center">
-                            <div className="relative w-48 h-48 rounded-full overflow-hidden">
+                            <div className="relative w-48 h-48 overflow-hidden rounded-[6rem] transition-all hover:rounded-[3rem]">
                                 {member.image ? (
                                     <img
                                         src={member.image}

@@ -7,7 +7,7 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
     return (
-        <div className="bg-theme-100 text-white min-h-screen relative overflow-hidden z-0">
+        <div className="bg-theme-100 text-white min-h-dvh relative overflow-hidden z-0">
             <Blob
                 className="fixed w-220 h-220 -top-60 -right-60 text-theme-300 opacity-10 blur-sm -z-10"
                 speed={3}

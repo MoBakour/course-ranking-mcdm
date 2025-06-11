@@ -9,7 +9,7 @@ const Table = ({ data, setDetails }: TableProps) => {
     return (
         <div>
             <div className="overflow-x-auto">
-                <table className="w-full bg-theme-200/25 backdrop-blur-xl rounded-lg overflow-hidden">
+                <table className="w-full bg-theme-400/5 backdrop-blur-lg rounded-lg overflow-hidden">
                     <thead>
                         <tr className="bg-theme-300 text-sm">
                             <th className="px-6 py-3 text-left font-semibold">
@@ -29,6 +29,7 @@ const Table = ({ data, setDetails }: TableProps) => {
                                 onClick={() => setDetails(item.name)}
                                 key={index}
                                 className="border-t border-theme-300 text-sm transition hover:bg-theme-300/15 hover:scale-102 cursor-pointer"
+                                title={item.name}
                             >
                                 <td className="px-6 py-4">{index + 1}</td>
                                 <td className="px-6 py-4">{item.name}</td>

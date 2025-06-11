@@ -206,7 +206,7 @@ const Home = () => {
                 >
                     <NavLink
                         to="/calculator"
-                        className="bg-theme-400 text-white block w-[120px] py-2 rounded-md text-center"
+                        className="border-2 border-transparent bg-theme-400 text-white block w-[120px] py-2 rounded-md text-center"
                     >
                         Get Started
                     </NavLink>
