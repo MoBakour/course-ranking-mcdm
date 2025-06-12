@@ -200,7 +200,8 @@ export function runPFS_CIMAS_ARTASI(
     console.log("Nminus", Nminus);
 
     // Step 19: H_i scores
-    const psi = 0.5,
+    // TODO: psi is supposed to be 0.5
+    const psi = 1,
         tau = 1;
     const H: number[] = [];
 
@@ -237,7 +238,11 @@ export function runPFS_CIMAS_ARTASI(
 
     // Ranking
     const ranked = alternatives
-        .map((alt, idx) => ({ name: alt.name, score: normalizedH[idx] }))
+        .map((alt, idx) => ({
+            name: alt.name,
+            score: H[idx],
+            normalized: normalizedH[idx],
+        }))
         .sort((a, b) => b.score - a.score);
 
     console.log("=== Final Ranking ===");

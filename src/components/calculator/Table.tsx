@@ -21,6 +21,9 @@ const Table = ({ data, setDetails }: TableProps) => {
                             <th className="px-6 py-3 text-left font-semibold">
                                 Score
                             </th>
+                            <th className="px-6 py-3 text-left font-semibold">
+                                Percentage
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -34,7 +37,10 @@ const Table = ({ data, setDetails }: TableProps) => {
                                 <td className="px-6 py-4">{index + 1}</td>
                                 <td className="px-6 py-4">{item.name}</td>
                                 <td className="px-6 py-4 text-sm">
-                                    {(item.score * 100).toFixed(2)}%
+                                    {item.score.toFixed(2)}
+                                </td>
+                                <td className="px-6 py-4 text-sm">
+                                    {(item.normalized * 100).toFixed(2)}%
                                 </td>
                             </tr>
                         ))}
