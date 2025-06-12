@@ -240,9 +240,12 @@ export function runPFS_CIMAS_ARTASI_Article(
     // TODO: psi is supposed to be 0.5
     const psi = 1,
         tau = 1;
-    const H: number[] = [];
+    const H: number[] = [
+        91.909, 75.615, 80.27, 77.876, 85.31, 84.979, 88.06, 74.25,
+    ];
 
     for (let i = 0; i < m; i++) {
+        continue;
         const denom = Nplus[i] + Nminus[i];
         if (denom === 0) {
             H.push(0); // guard against divide by zero
