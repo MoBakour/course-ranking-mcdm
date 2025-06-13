@@ -30,7 +30,7 @@ export type Criteria = {
 export interface Ranking {
     name: string;
     score: number;
-    normalized: number;
+    performance: number;
 }
 
 export interface ExpertData {

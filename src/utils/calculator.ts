@@ -237,20 +237,15 @@ export function runPFS_CIMAS_ARTASI(
         console.log(`${alternatives[i].name}: H_i = ${H[i].toFixed(4)}`);
     }
 
-    // Optional normalization to [0, 1]
     const maxH = Math.max(...H);
-    const minH = Math.min(...H);
-
-    const normalizedH = H.map((h) =>
-        maxH === minH ? 0 : (h - minH) / (maxH - minH)
-    );
+    const performance = H.map((h) => (h / maxH) * 100);
 
     // Ranking
     const ranked = alternatives
         .map((alt, idx) => ({
             name: alt.name,
             score: H[idx],
-            normalized: normalizedH[idx],
+            performance: performance[idx],
         }))
         .sort((a, b) => b.score - a.score);
 

@@ -40,7 +40,7 @@ const Table = ({ data, setDetails }: TableProps) => {
                                     {item.score.toFixed(2)}
                                 </td>
                                 <td className="px-6 py-4 text-sm">
-                                    {(item.normalized * 100).toFixed(2)}%
+                                    {item.performance.toFixed(2)}%
                                 </td>
                             </tr>
                         ))}

@@ -236,6 +236,11 @@ export function runPFS_CIMAS_ARTASI_Article(
         }
     }
 
+    console.log("=== Pplus Matrix ===");
+    console.table(Pplus);
+    console.log("=== Pminus Matrix ===");
+    console.table(Pminus);
+
     // Step 18: Nplus and Nminus
     const Nplus: number[] = Pplus.map((row) => row.reduce((a, b) => a + b, 0));
     const Nminus: number[] = Pminus.map((row) =>
@@ -277,20 +282,15 @@ export function runPFS_CIMAS_ARTASI_Article(
         console.log(`${alternatives[i].name}: H_i = ${H[i].toFixed(4)}`);
     }
 
-    // Optional normalization to [0, 1]
     const maxH = Math.max(...H);
-    const minH = Math.min(...H);
-
-    const normalizedH = H.map((h) =>
-        maxH === minH ? 0 : (h - minH) / (maxH - minH)
-    );
+    const performance = H.map((h) => (h / maxH) * 100);
 
     // Ranking
     const ranked = alternatives
         .map((alt, idx) => ({
             name: alt.name,
             score: H[idx],
-            normalized: normalizedH[idx],
+            performance: performance[idx],
         }))
         .sort((a, b) => b.score - a.score);
 

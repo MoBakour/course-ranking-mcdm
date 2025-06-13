@@ -124,7 +124,6 @@ const Charts = ({ data, ranking }: ChartsProps) => {
         scales: {
             y: {
                 beginAtZero: true,
-                max: 1,
             },
             x: {
                 ticks: {
