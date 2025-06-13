@@ -98,6 +98,15 @@ export function runPFS_CIMAS_ARTASI_Article(
         );
     });
 
+    // normalize weights. all weights should sum to 1
+    const totalWeight = experts.reduce(
+        (acc, expert) => acc + (expert.weight ?? 0),
+        0
+    );
+    experts.forEach((expert) => {
+        expert.weight = expert.weight ? expert.weight / totalWeight : 0;
+    });
+
     const m = alternatives.length;
     const n = criteria.length;
 
