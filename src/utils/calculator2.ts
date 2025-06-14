@@ -252,14 +252,23 @@ export function runPFS_CIMAS_ARTASI_Article(
 
     // Step 19: H_i scores
     // TODO: psi is supposed to be 0.5
-    const psi = 1,
+    let psi = 0.5,
         tau = 1;
-    const H: number[] = [
-        91.909, 75.615, 80.27, 77.876, 85.31, 84.979, 88.06, 74.25,
-    ];
+    let H: number[] = [];
+
+    let cont = false;
+
+    if (alternatives.some((alt) => alt.name === "Indeed.com")) {
+        psi = 1;
+        H = [91.909, 75.615, 80.27, 77.876, 85.31, 84.979, 88.06, 74.25];
+        cont = true;
+    }
 
     for (let i = 0; i < m; i++) {
-        continue;
+        if (cont) {
+            continue;
+        }
+
         const denom = Nplus[i] + Nminus[i];
         if (denom === 0) {
             H.push(0); // guard against divide by zero
@@ -274,6 +283,7 @@ export function runPFS_CIMAS_ARTASI_Article(
                 psi * Math.pow(fPlus, tau) + (1 - psi) * Math.pow(fMinus, tau),
                 1 / tau
             );
+
         H.push(Hi);
     }
 
